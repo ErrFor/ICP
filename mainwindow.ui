@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGraphicsView" name="graphicsView">
+   <widget class="QGraphicsView" name="Buttons">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="createRobot">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -50,7 +50,7 @@
      <string>Delete Robot</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="createObstacle">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -66,8 +66,8 @@
    <widget class="QPushButton" name="pushButton_4">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>20</y>
+      <x>1150</x>
+      <y>90</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QPushButton" name="pushButton_5">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>20</y>
+      <x>1150</x>
+      <y>140</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -92,7 +92,7 @@
      <string>Stop</string>
     </property>
    </widget>
-   <widget class="QGraphicsView" name="graphicsView_2">
+   <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -100,6 +100,19 @@
       <width>1311</width>
       <height>741</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deleteObstacle">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>20</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Delete Obstacle</string>
     </property>
    </widget>
   </widget>

@@ -17,6 +17,10 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        obstacle.cpp
+        obstacle.h
+        createobstacledialog.cpp
+        createobstacledialog.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

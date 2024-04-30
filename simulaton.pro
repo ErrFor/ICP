@@ -8,7 +8,8 @@ TEMPLATE = app
 
 FORMS += mainwindow.ui
 
-SOURCES += main.cpp\
+SOURCES += main.cpp
            mainwindow.cpp
 
 HEADERS += mainwindow.h
+	   obstacle.h

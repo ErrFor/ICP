@@ -1,9 +1,18 @@
+/**
+ * @file mainwindow.cpp
+ * @brief Main file for handling output logic
+ * @author xkinin00
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "obstacle.h"
 #include "createobstacledialog.h"
+#include "createRobotDialog.h"
 #include <QGraphicsScene>
 #include <QDebug>
+#include <QTimer>
+#include <stdio.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     // В конструкторе MainWindow, после инициализации ui
     connect(ui->createObstacle, &QPushButton::clicked, this, &MainWindow::on_createObstacleButton_clicked);
     connect(ui->deleteObstacle, &QPushButton::clicked, this, &MainWindow::on_deleteObstacleButton_clicked);
+    connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::on_createRobotButton_clicked);
 
     QPushButton* buttons[2] = { ui->pushButton_4, ui->pushButton_5};
 
@@ -23,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 // Создаем сцену
     QGraphicsScene *scene = new QGraphicsScene(this);
     // Устанавливаем размер сцены (например, 800x600)
-//    scene->setSceneRect(0, 200, 1311, 741);
+    scene->setSceneRect(0, 0, 1500, 600);
     scene->setBackgroundBrush(QBrush(Qt::gray));
 
     // Создаем виджет QGraphicsView и связываем его с сценой
@@ -34,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     deletingMode = false;
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateRobots);
+    timer->start(100); // Обновление каждые 100 мс
 }
 
 MainWindow::~MainWindow()
@@ -48,7 +62,6 @@ void MainWindow::on_createObstacleButton_clicked()
         int x = dialog.getX();
         int y = dialog.getY();
         int width = dialog.getWidth();
-//        int height = dialog.getHeight();
 
         Obstacle *obstacle = new Obstacle(x, y, width);
         ui->graphicsView->scene()->addItem(obstacle);
@@ -57,8 +70,8 @@ void MainWindow::on_createObstacleButton_clicked()
 
 void MainWindow::on_deleteObstacleButton_clicked()
 {
-    // Устанавливаем флаг режима удаления
-    deletingMode = !deletingMode;  // deletingMode должен быть членом класса MainWindow
+    // set deletingmode flag
+    deletingMode = !deletingMode;
 
     // Меняем визуальное отображение для указания режима удаления
     if (deletingMode) {
@@ -77,3 +90,34 @@ void MainWindow::on_deleteObstacleButton_clicked()
         }
     }
 }
+
+void MainWindow::on_createRobotButton_clicked() {
+    CreateRobotDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        int robotType = dialog.getRobotType();
+        double x = dialog.getX();
+        double y = dialog.getY();
+        int orientation = dialog.getOrientation();
+        printf("KAL %d\n", orientation);
+        if (robotType == 0) {  // Autonomous
+            double detectionRadius = dialog.getDetectionRadius();
+            double avoidanceAngle = dialog.getAvoidanceAngle();
+            AutonomousRobot *robotItem = new AutonomousRobot(x, y, orientation, detectionRadius, avoidanceAngle);
+            robots.append(robotItem);
+            ui->graphicsView->scene()->addItem(robotItem);
+        } else {  // Remote Controlled
+//            robotItem = new RemoteControlledRobot(x, y, orientation, speed);
+        }
+
+
+    }
+}
+
+void MainWindow::updateRobots() {
+    for (Robot* robot : robots) {  // Перебор всех роботов в списке
+        robot->update();
+        ui->graphicsView->scene()->update();  // Обновление сцены, если требуется
+    }
+}
+
+

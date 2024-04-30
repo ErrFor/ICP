@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1277</width>
-    <height>932</height>
+    <width>1800</width>
+    <height>1026</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1321</width>
+      <width>1500</width>
       <height>201</height>
      </rect>
     </property>
@@ -29,7 +29,7 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>111</width>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
@@ -42,7 +42,7 @@
      <rect>
       <x>150</x>
       <y>20</y>
-      <width>111</width>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
@@ -55,7 +55,7 @@
      <rect>
       <x>280</x>
       <y>20</y>
-      <width>111</width>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
@@ -66,8 +66,8 @@
    <widget class="QPushButton" name="pushButton_4">
     <property name="geometry">
      <rect>
-      <x>1150</x>
-      <y>90</y>
+      <x>1360</x>
+      <y>100</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QPushButton" name="pushButton_5">
     <property name="geometry">
      <rect>
-      <x>1150</x>
-      <y>140</y>
+      <x>1360</x>
+      <y>150</y>
       <width>111</width>
       <height>41</height>
      </rect>
@@ -97,9 +97,21 @@
      <rect>
       <x>0</x>
       <y>200</y>
-      <width>1311</width>
-      <height>741</height>
+      <width>1500</width>
+      <height>600</height>
      </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>1500</width>
+      <height>600</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>1000</width>
+      <height>600</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="deleteObstacle">
@@ -107,7 +119,7 @@
      <rect>
       <x>410</x>
       <y>20</y>
-      <width>111</width>
+      <width>121</width>
       <height>41</height>
      </rect>
     </property>
@@ -121,7 +133,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1277</width>
+     <width>1800</width>
      <height>22</height>
     </rect>
    </property>

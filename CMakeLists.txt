@@ -21,6 +21,10 @@ set(PROJECT_SOURCES
         obstacle.h
         createobstacledialog.cpp
         createobstacledialog.h
+        createRobotDialog.cpp
+        createRobotDialog.h
+        robots.h
+        robots.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

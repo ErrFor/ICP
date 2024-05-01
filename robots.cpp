@@ -43,7 +43,7 @@ bool AutonomousRobot::detectObstacle() {
     QList<QGraphicsItem*> collidingItems = scene()->items(detectionPath);
 
     foreach(QGraphicsItem *item, collidingItems) {
-        if (item != this && dynamic_cast<Obstacle*>(item)) {
+        if (item != this && (dynamic_cast<Obstacle*>(item) || dynamic_cast<Robot*>(item))) {
             qDebug() << "Obstacle detected: collision with an obstacle";
             return true;
         }

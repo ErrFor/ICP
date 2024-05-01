@@ -127,24 +127,24 @@
      <string>Delete Obstacle</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="ForwardButton">
+   <widget class="QPushButton" name="moveRobotButton">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>820</x>
       <y>20</y>
       <width>131</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Forward</string>
+     <string>Go</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="LeftButton">
+   <widget class="QPushButton" name="rotateLeftButton">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>90</y>
+      <x>680</x>
+      <y>60</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -153,11 +153,11 @@
      <string>Left</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="RightButton">
+   <widget class="QPushButton" name="rotateRightButton">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>90</y>
+      <x>960</x>
+      <y>60</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -166,11 +166,11 @@
      <string>Right</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="StopButton">
+   <widget class="QPushButton" name="stopRobotButton">
     <property name="geometry">
      <rect>
-      <x>830</x>
-      <y>90</y>
+      <x>820</x>
+      <y>100</y>
       <width>131</width>
       <height>41</height>
      </rect>

@@ -3,6 +3,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPointer>
 #include "robots.h"
 
 QT_BEGIN_NAMESPACE
@@ -18,6 +19,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     bool isDeletingModeActive() const { return deletingMode; }
     ~MainWindow();
+    void selectRobot(RemoteRobot* robot);
 
 private slots:
     void on_createObstacleButton_clicked();
@@ -25,16 +27,19 @@ private slots:
     void on_createRobotButton_clicked();
     void on_deleteRobotButton_clicked();
     void updateRobots();
-    void moveRobotForward();
+    void moveRobot();
     void rotateRobotLeft();
     void rotateRobotRight();
+    void stopRobot();
     void startSimulation();
     void stopSimulation();
 
 private:
     Ui::MainWindow *ui;
     bool deletingMode;
-    QList<Robot*> robots;
+    QList<Robot*> autonomousRobots;
+    QList<Robot*> remoteRobots;
+    RemoteRobot* selectedRobot = nullptr;
 };
 
 #endif // MAINWINDOW_H

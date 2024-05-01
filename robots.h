@@ -9,8 +9,9 @@ class Robot : public QGraphicsItem {
 protected:
     double positionX, positionY;
     int speed;
-    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 public:
+    bool isMoving = false;
+
     Robot(double posX, double posY, int speed)
         : positionX(posX), positionY(posY), speed(speed){
 
@@ -36,7 +37,7 @@ private:
     double avoidanceAngle;  // Angle to turn for obstacle avoidance
     int angle;
     int orientation;
-
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 public:
     AutonomousRobot(double posX, double posY, int orient, double detectRadius, double avoidAngle, int speed)
         : Robot(posX, posY, speed), detectionRadius(detectRadius), avoidanceAngle(avoidAngle) {
@@ -137,21 +138,24 @@ public:
 
 class RemoteRobot: public Robot {
 private:
-    int orientation = 0;
-
+    int orientation = NULL;
+    double detectionRadius;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 public:
-    RemoteRobot(double posX, double posY, int speed)
-        : Robot(posX, posY, speed) {}
+    RemoteRobot(double posX, double posY, int speed, double detectionRadius)
+        : Robot(posX, posY, speed), detectionRadius(detectionRadius) {
+        setPos(positionX, positionY);
+    }
 
     void moveForward();
-    bool detectObstacle();
+
     void rotateRight();
     void rotateLeft();
+    void stop();
+    bool detectObstacle();
 
     void update() override {
-        if (detectObstacle()) {
-            speed = 0;
-        }
+
 
         // Calculate proposed movement
         double radAngle = orientation * M_PI / 180;
@@ -163,6 +167,20 @@ public:
         positionY = proposedY;
         setPos(positionX, positionY);
 
+        if (detectObstacle()) {
+            stop();
+        }
+
         qDebug() << "Robot moved to:" << positionX << "," << positionY;
+    }
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override{
+        Q_UNUSED(option);
+        Q_UNUSED(widget);
+
+        // Basic robot visualization
+        painter->setBrush(Qt::blue);
+        painter->drawEllipse(boundingRect()); // Draw robot centered at its position
+
     }
 };

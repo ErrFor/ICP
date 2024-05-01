@@ -45,7 +45,6 @@ void CreateRobotDialog::setupConnections() {
 
 void CreateRobotDialog::onRobotTypeChanged(const QString &type) {
     bool isAutonomous = (type == "Autonomous");
-    detectionRadiusInput->setVisible(isAutonomous);
     avoidanceAngleInput->setVisible(isAutonomous);
     orientationTypeCombo->setVisible(isAutonomous);
 }

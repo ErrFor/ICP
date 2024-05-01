@@ -25,7 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->deleteObstacle, &QPushButton::clicked, this, &MainWindow::on_deleteObstacleButton_clicked);
     connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::on_createRobotButton_clicked);
     connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::on_deleteRobotButton_clicked);
-    connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::on_deleteRobotButton_clicked);
+    connect(ui->moveRobotButton, &QPushButton::clicked, this, &MainWindow::moveRobot);
+    connect(ui->rotateRightButton, &QPushButton::clicked, this, &MainWindow::rotateRobotRight);
+    connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateRobotLeft);
+    connect(ui->stopRobotButton, &QPushButton::clicked, this, &MainWindow::stopRobot);
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);
 
@@ -118,17 +121,17 @@ void MainWindow::on_createRobotButton_clicked() {
         double y = dialog.getY();
         int orientation = dialog.getOrientation();
         int speed = dialog.getSpeed();
-        if (robotType == 0) {  // Autonomous
-            double detectionRadius = dialog.getDetectionRadius();
+        double detectionRadius = dialog.getDetectionRadius();
+        if (robotType == 0) {  // Autonomous 
             double avoidanceAngle = dialog.getAvoidanceAngle();
             AutonomousRobot *robotItem = new AutonomousRobot(x, y, orientation, detectionRadius, avoidanceAngle, speed);
-            robots.append(robotItem);
+            autonomousRobots.append(robotItem);
             ui->graphicsView->scene()->addItem(robotItem);
         } else {  // Remote Controlled
-//            robotItem = new RemoteControlledRobot(x, y, orientation, speed);
+            RemoteRobot *remoteRobotItem = new RemoteRobot(x, y, speed, detectionRadius);
+            remoteRobots.append(remoteRobotItem);
+            ui->graphicsView->scene()->addItem(remoteRobotItem);
         }
-
-
     }
     updateRobots();
 }
@@ -146,10 +149,46 @@ void MainWindow::on_deleteRobotButton_clicked()
     }
 }
 
+void MainWindow::selectRobot(RemoteRobot* robot) {
+    selectedRobot = robot;  // Сохраняем выбранного робота
+}
+
+
+void MainWindow::moveRobot() {
+    if (selectedRobot) {
+        selectedRobot->moveForward();
+    }
+}
+
+void MainWindow::rotateRobotRight() {
+    if (selectedRobot) {
+        selectedRobot->rotateRight();
+    }
+}
+
+void MainWindow::rotateRobotLeft() {
+    if (selectedRobot) {
+        selectedRobot->rotateLeft();
+    }
+}
+
+void MainWindow::stopRobot() {
+    if (selectedRobot) {
+        selectedRobot->stop();
+    }
+}
+
 void MainWindow::updateRobots() {
-    for (Robot* robot : robots) {  // Перебор всех роботов в списке
+    for (Robot* robot : autonomousRobots) {  // Перебор всех роботов в списке
         robot->update();
         ui->graphicsView->scene()->update();  // Обновление сцены, если требуется
+    }
+
+    for (Robot* robot: remoteRobots) {
+        if(robot->isMoving){
+            robot->update();
+            ui->graphicsView->scene()->update();
+        }
     }
 }
 

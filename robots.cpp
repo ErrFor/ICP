@@ -7,7 +7,7 @@
 #include "obstacle.h"
 #include "qgraphicssceneevent.h"
 
-void Robot::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void AutonomousRobot::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         auto scene = this->scene();
@@ -28,6 +28,31 @@ void Robot::mousePressEvent(QGraphicsSceneMouseEvent *event)
         }
     }
 }
+
+// В файле RemoteRobot.cpp или там, где у вас определен класс RemoteRobot
+void RemoteRobot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    if (event->button() == Qt::LeftButton) {
+        auto scene = this->scene();
+        if (!scene) return;
+
+        auto views = scene->views();
+        if (views.isEmpty()) return;
+
+        QGraphicsView* view = views.first();
+        if (!view) return;
+
+        MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
+        if (!mainWindow) return;
+
+        if (mainWindow->isDeletingModeActive()) {
+            scene->removeItem(this);
+            delete this;
+        } else {
+            mainWindow->selectRobot(this);  // Теперь передаем this правильного типа
+        }
+    }
+}
+
 
 void AutonomousRobot::move() {
     double radAngle = orientation * M_PI / 180;
@@ -78,23 +103,67 @@ bool AutonomousRobot::detectObstacle() {
 }
 
 void RemoteRobot::moveForward() {
-    double radAngle = orientation * M_PI / 180;
-    double dx = speed * cos(radAngle);
-    double dy = speed * sin(radAngle);
+    if(detectObstacle()){
+        isMoving = false;
+        return;
+    }
 
-    positionX += dx;
-    positionY += dy;
+        double radAngle = orientation * M_PI / 180;
+        double dx = speed * cos(radAngle);
+        double dy = speed * sin(radAngle);
 
-    // Use QGraphicsItem's setPos to handle updating the scene position
-    setPos(positionX, positionY);
+        positionX += dx;
+        positionY += dy;
+
+        isMoving = true;
+
+        setPos(positionX, positionY);
 }
 
 void RemoteRobot::rotateRight() {
-    orientation = (orientation + 90) % 360;
-    update();
+        orientation = (orientation + 90) % 360;
 }
 
 void RemoteRobot::rotateLeft() {
-    orientation = (orientation - 90 + 360) % 360;
-    update();
+        orientation = (orientation - 90 + 360) % 360;
+}
+
+void RemoteRobot::stop(){
+    isMoving = false;
+}
+
+bool RemoteRobot::detectObstacle(){
+    qDebug() << "Checking for obstacles for robot at position" << positionX << positionY;
+
+    double radAngle = orientation * M_PI / 180;
+    double dx = detectionRadius * cos(radAngle);
+    double dy = detectionRadius * sin(radAngle);
+
+    QRectF robotFuturePosition(positionX + dx, positionY + dy, 20, 20);
+    QGraphicsScene* currentScene = scene();
+    QRectF sceneRect = currentScene->sceneRect();
+
+    if (!sceneRect.contains(robotFuturePosition)) {
+        qDebug() << "Obstacle detected: out of scene bounds";
+        return true;
+    }
+
+    // Рассчитаем правильную область обнаружения
+    QPainterPath detectionPath;
+    QPointF frontCenter = QPointF(positionX + cos(radAngle) * 20, positionY + sin(radAngle) * 20); // 20 - это предполагаемый "радиус" робота
+    detectionPath.moveTo(frontCenter);
+    detectionPath.addRect(QRectF(frontCenter.x(), frontCenter.y(), detectionRadius, 20)); // Эта область теперь корректно ориентирована
+
+    detectionPath.addRect(QRectF(positionX, positionY, detectionRadius, 20));
+    QList<QGraphicsItem*> collidingItems = scene()->items(detectionPath);
+
+    foreach(QGraphicsItem *item, collidingItems) {
+        if (item != this && (dynamic_cast<Obstacle*>(item) || dynamic_cast<Robot*>(item))) {
+            qDebug() << "Obstacle detected: collision with an obstacle";
+            return true;
+        }
+    }
+
+    qDebug() << "No obstacles detected";
+    return false;
 }

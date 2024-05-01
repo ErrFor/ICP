@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1800</width>
-    <height>1026</height>
+    <width>1498</width>
+    <height>844</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -63,7 +63,7 @@
      <string>Create Obstacle</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="startButton">
     <property name="geometry">
      <rect>
       <x>1360</x>
@@ -79,7 +79,7 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="stopButton">
     <property name="geometry">
      <rect>
       <x>1360</x>
@@ -133,7 +133,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1800</width>
+     <width>1498</width>
      <height>22</height>
     </rect>
    </property>

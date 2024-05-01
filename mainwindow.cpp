@@ -20,39 +20,56 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // В конструкторе MainWindow, после инициализации ui
+    // slots connections
     connect(ui->createObstacle, &QPushButton::clicked, this, &MainWindow::on_createObstacleButton_clicked);
     connect(ui->deleteObstacle, &QPushButton::clicked, this, &MainWindow::on_deleteObstacleButton_clicked);
     connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::on_createRobotButton_clicked);
+    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
+    connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);
 
-    QPushButton* buttons[2] = { ui->pushButton_4, ui->pushButton_5};
+    ui->startButton->setStyleSheet("QPushButton { background-color: green; }");
+    ui->stopButton->setStyleSheet("QPushButton { background-color: red; }");
 
-    buttons[0]->setStyleSheet("QPushButton { background-color: green; }");
-    buttons[1]->setStyleSheet("QPushButton { background-color: red; }");
-
-// Создаем сцену
+    // create scene
     QGraphicsScene *scene = new QGraphicsScene(this);
-    // Устанавливаем размер сцены (например, 800x600)
     scene->setSceneRect(0, 0, 1500, 600);
     scene->setBackgroundBrush(QBrush(Qt::gray));
 
-    // Создаем виджет QGraphicsView и связываем его с сценой
+    // create widget and link with scene
     ui->graphicsView->setScene(scene);
 
-    // Опционально: отключаем скроллбары, если хотите, чтобы вид всегда оставался на всю сцену
+    // turn of scrollbars
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // Включение масштабирования, если необходимо
+    ui->graphicsView->setResizeAnchor(QGraphicsView::AnchorViewCenter);
+    // Убедитесь, что масштабирование отключено или правильно настроено
+    ui->graphicsView->setTransform(QTransform());
 
     deletingMode = false;
 
-    QTimer *timer = new QTimer(this);
+    timer = new QTimer(this);
+    timer->setInterval(200); // Обновление каждые 200 мс
     connect(timer, &QTimer::timeout, this, &MainWindow::updateRobots);
-    timer->start(100); // Обновление каждые 100 мс
+
+    timer->stop();
 }
 
 MainWindow::~MainWindow()
 {
     // Деструктор
+}
+
+void MainWindow::startSimulation() {
+    if (!timer->isActive()) {
+        timer->start();
+    }
+}
+
+void MainWindow::stopSimulation() {
+    if (timer->isActive()) {
+        timer->stop();
+    }
 }
 
 void MainWindow::on_createObstacleButton_clicked()
@@ -98,11 +115,11 @@ void MainWindow::on_createRobotButton_clicked() {
         double x = dialog.getX();
         double y = dialog.getY();
         int orientation = dialog.getOrientation();
-        printf("KAL %d\n", orientation);
+        int speed = dialog.getSpeed();
         if (robotType == 0) {  // Autonomous
             double detectionRadius = dialog.getDetectionRadius();
             double avoidanceAngle = dialog.getAvoidanceAngle();
-            AutonomousRobot *robotItem = new AutonomousRobot(x, y, orientation, detectionRadius, avoidanceAngle);
+            AutonomousRobot *robotItem = new AutonomousRobot(x, y, orientation, detectionRadius, avoidanceAngle, speed);
             robots.append(robotItem);
             ui->graphicsView->scene()->addItem(robotItem);
         } else {  // Remote Controlled
@@ -111,6 +128,7 @@ void MainWindow::on_createRobotButton_clicked() {
 
 
     }
+    updateRobots();
 }
 
 void MainWindow::updateRobots() {

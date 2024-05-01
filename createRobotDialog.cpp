@@ -19,6 +19,7 @@ void CreateRobotDialog::setupForm() {
     xInput = new QLineEdit();
     yInput = new QLineEdit();
 
+    speedInput = new QLineEdit();
     detectionRadiusInput = new QLineEdit();
     avoidanceAngleInput = new QLineEdit();
     createButton = new QPushButton("Create");
@@ -27,6 +28,7 @@ void CreateRobotDialog::setupForm() {
     layout->addRow("Type", robotTypeCombo);
     layout->addRow("X", xInput);
     layout->addRow("Y", yInput);
+    layout->addRow("Speed", speedInput);
     layout->addRow("Orientation", orientationTypeCombo);
     layout->addRow("Detection Radius", detectionRadiusInput);
     layout->addRow("Avoidance Angle", avoidanceAngleInput);
@@ -70,4 +72,8 @@ int CreateRobotDialog::getRobotType() const {
 
 int CreateRobotDialog::getOrientation() const {
     return orientationTypeCombo->currentIndex();  // Возвращает индекс выбранного типа робота
+}
+
+int CreateRobotDialog::getSpeed() const{
+    return speedInput->text().toInt();
 }

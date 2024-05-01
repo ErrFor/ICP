@@ -16,6 +16,7 @@ public:
     int getRobotType() const;
     int getOrientation() const;
 
+    int getSpeed() const;
     double getX() const;
     double getY() const;
     double getDetectionRadius() const;  // Only for Autonomous
@@ -25,6 +26,7 @@ private:
     QComboBox *robotTypeCombo;
     QLineEdit *xInput;
     QLineEdit *yInput;
+    QLineEdit *speedInput;
     QComboBox *orientationTypeCombo;
     QLineEdit *detectionRadiusInput;
     QLineEdit *avoidanceAngleInput;

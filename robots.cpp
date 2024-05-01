@@ -1,38 +1,42 @@
-#include <iostream>
-#include <cmath>  // for basic math functions such as cos() and sin()
+#include <cmath>  // For cos() and sin()
 #include <QGraphicsItem>
 #include <QPainter>
 #include "qgraphicsscene.h"
 #include "robots.h"
 
-void AutonomousRobot::move(){
-   switch (orientation) {
-       case 0:
-           positionY -= 1;  // Движение вверх уменьшает координату Y
-           break;
-       case 1:
-           positionX += 1;  // Движение вправо увеличивает координату X
-           break;
-       case 2:
-           positionY += 1;  // Движение вниз увеличивает координату Y
-           break;
-       case 3:
-           positionX -= 1;  // Движение влево уменьшает координату X
-           break;
-       }
-   setPos(positionX, positionY);
+void AutonomousRobot::move() {
+    double radAngle = orientation * M_PI / 180;
+    double dx = speed * cos(radAngle);
+    double dy = speed * sin(radAngle);
+
+    positionX += dx;
+    positionY += dy;
+
+    // Use QGraphicsItem's setPos to handle updating the scene position
+    setPos(positionX, positionY);
 }
 
 bool AutonomousRobot::detectObstacle() {
-    QRectF searchArea(positionX - detectionRadius, positionY - detectionRadius,
-                      detectionRadius, detectionRadius);
-    QList<QGraphicsItem*> itemsFound = scene()->items(searchArea);
-    ;
+    double radAngle = orientation * M_PI / 180;
+    double dx = detectionRadius * cos(radAngle);
+    double dy = detectionRadius * sin(radAngle);
+
+    // Check for scene boundaries
+    QGraphicsScene* currentScene = scene();
+    QRectF sceneRect = currentScene->sceneRect();
+    QRectF robotFuturePosition(positionX + dx, positionY + dy, 20, 20); // Assuming robot size is 20x20
+
+    if (!sceneRect.contains(robotFuturePosition)) {
+        return true; // Robot is about to move out of the scene bounds
+    }
+
+    // Existing obstacle detection logic remains the same
+    QList<QGraphicsItem*> itemsFound = currentScene->items(mapToScene(robotFuturePosition).boundingRect(), Qt::IntersectsItemShape);
     for (QGraphicsItem* item : itemsFound) {
-        printf("%s", item);
-        if (item != this) {  // Проверяем, не является ли элемент самим роботом и является ли препятствием
+        if (item != this && item->collidesWithItem(this)) {
             return true;
         }
     }
     return false;
 }
+

@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->createObstacle, &QPushButton::clicked, this, &MainWindow::on_createObstacleButton_clicked);
     connect(ui->deleteObstacle, &QPushButton::clicked, this, &MainWindow::on_deleteObstacleButton_clicked);
     connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::on_createRobotButton_clicked);
+    connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::on_deleteRobotButton_clicked);
+    connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::on_deleteRobotButton_clicked);
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);
 
@@ -129,6 +131,19 @@ void MainWindow::on_createRobotButton_clicked() {
 
     }
     updateRobots();
+}
+
+void MainWindow::on_deleteRobotButton_clicked()
+{
+    // set deletingmode flag
+    deletingMode = !deletingMode;
+
+    // Меняем визуальное отображение для указания режима удаления
+    if (deletingMode) {
+        foreach (QGraphicsItem *item, ui->graphicsView->scene()->items()) {
+            AutonomousRobot *robotItem = dynamic_cast<AutonomousRobot*>(item);
+        }
+    }
 }
 
 void MainWindow::updateRobots() {

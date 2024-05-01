@@ -1,9 +1,33 @@
 #include <cmath>  // For cos() and sin()
 #include <QGraphicsItem>
 #include <QPainter>
+#include "mainwindow.h"
 #include "qgraphicsscene.h"
-#include "robots.h"
+#include "qgraphicsview.h"
 #include "obstacle.h"
+#include "qgraphicssceneevent.h"
+
+void Robot::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        auto scene = this->scene();
+        if (!scene) return; // Проверка наличия сцены
+
+        auto views = scene->views();
+        if (views.isEmpty()) return; // Проверка наличия виджетов просмотра
+
+        QGraphicsView* view = views.first(); // Берём первый виджет просмотра
+        if (!view) return; // Проверка, что виджет просмотра существует
+
+        MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
+        if (!mainWindow) return; // Проверка, что приведение типов выполнено корректно
+
+        if (mainWindow->isDeletingModeActive()) {
+            scene->removeItem(this);
+            delete this; // Удаление элемента
+        }
+    }
+}
 
 void AutonomousRobot::move() {
     double radAngle = orientation * M_PI / 180;
@@ -53,4 +77,24 @@ bool AutonomousRobot::detectObstacle() {
     return false;
 }
 
+void RemoteRobot::moveForward() {
+    double radAngle = orientation * M_PI / 180;
+    double dx = speed * cos(radAngle);
+    double dy = speed * sin(radAngle);
 
+    positionX += dx;
+    positionY += dy;
+
+    // Use QGraphicsItem's setPos to handle updating the scene position
+    setPos(positionX, positionY);
+}
+
+void RemoteRobot::rotateRight() {
+    orientation = (orientation + 90) % 360;
+    update();
+}
+
+void RemoteRobot::rotateLeft() {
+    orientation = (orientation - 90 + 360) % 360;
+    update();
+}

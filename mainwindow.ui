@@ -37,7 +37,7 @@
      <string>Create Robot</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="deleteRobot">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -127,6 +127,58 @@
      <string>Delete Obstacle</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="ForwardButton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>20</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Forward</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="LeftButton">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>90</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Left</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="RightButton">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>90</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Right</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StopButton">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>90</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -134,7 +186,7 @@
      <x>0</x>
      <y>0</y>
      <width>1498</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

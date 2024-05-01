@@ -23,7 +23,11 @@ private slots:
     void on_createObstacleButton_clicked();
     void on_deleteObstacleButton_clicked();
     void on_createRobotButton_clicked();
+    void on_deleteRobotButton_clicked();
     void updateRobots();
+    void moveRobotForward();
+    void rotateRobotLeft();
+    void rotateRobotRight();
     void startSimulation();
     void stopSimulation();
 

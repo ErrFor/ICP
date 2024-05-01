@@ -9,6 +9,7 @@ class Robot : public QGraphicsItem {
 protected:
     double positionX, positionY;
     int speed;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 public:
     Robot(double posX, double posY, int speed)
         : positionX(posX), positionY(posY), speed(speed){
@@ -131,5 +132,37 @@ public:
 
     void rotate(double angle) {
         setRotation(angle);  // Преобразуем в градусы и устанавливаем
+    }
+};
+
+class RemoteRobot: public Robot {
+private:
+    int orientation = 0;
+
+public:
+    RemoteRobot(double posX, double posY, int speed)
+        : Robot(posX, posY, speed) {}
+
+    void moveForward();
+    bool detectObstacle();
+    void rotateRight();
+    void rotateLeft();
+
+    void update() override {
+        if (detectObstacle()) {
+            speed = 0;
+        }
+
+        // Calculate proposed movement
+        double radAngle = orientation * M_PI / 180;
+        double proposedX = positionX + speed * cos(radAngle);
+        double proposedY = positionY + speed * sin(radAngle);
+
+        // Update position
+        positionX = proposedX;
+        positionY = proposedY;
+        setPos(positionX, positionY);
+
+        qDebug() << "Robot moved to:" << positionX << "," << positionY;
     }
 };

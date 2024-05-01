@@ -8,8 +8,15 @@ TEMPLATE = app
 
 FORMS += mainwindow.ui
 
-SOURCES += main.cpp
-           mainwindow.cpp
+SOURCES += main.cpp\
+           mainwindow.cpp\
+           createobstacledialog.cpp\
+           createRobotDialog.cpp\
+           obstacle.cpp\
+           robots.cpp
 
-HEADERS += mainwindow.h
-	   obstacle.h
+HEADERS += mainwindow.h\
+           obstacle.h\
+           createobstacledialog.h\
+           createRobotDialog.h\
+           robots.h

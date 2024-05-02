@@ -4,10 +4,10 @@
 
 ## Outline
 
-    - [Main structure](#main-structure)
-    - [Usage](#usage)
-    - [Technical implementation](#technical-implementation)
-    - [Evaluation](#evaluation)
+- [Main structure](#main-structure)
+- [Usage](#usage)
+- [Technical implementation](#technical-implementation)
+- [Evaluation](#evaluation)
 
 ## Main structure
 

@@ -26,7 +26,10 @@ public:
         painter->drawEllipse(positionX, positionY, 20, 20);
     }
 
-
+    QPointF rotatePoint(const QPointF& point, double angle) {
+        return QPointF(cos(angle) * point.x() - sin(angle) * point.y(),
+                       sin(angle) * point.x() + cos(angle) * point.y());
+    }
 
     virtual void update() = 0;
 };
@@ -126,11 +129,6 @@ public:
         painter->drawPath(viewField);
 }
 
-    QPointF rotatePoint(const QPointF& point, double angle) {
-        return QPointF(cos(angle) * point.x() - sin(angle) * point.y(),
-                       sin(angle) * point.x() + cos(angle) * point.y());
-    }
-
     void rotate(double angle) {
         setRotation(angle);  // Преобразуем в градусы и устанавливаем
     }
@@ -182,5 +180,34 @@ public:
         painter->setBrush(Qt::blue);
         painter->drawEllipse(boundingRect()); // Draw robot centered at its position
 
+        // Variables for trapezoid field of vision
+        double radOrientation = orientation * M_PI / 180;
+        double robotRadius = 10;  // Radius of the robot
+        double halfBaseWidth = robotRadius / 2;  // Half width at the robot
+        double halfTopWidth = detectionRadius * tan(M_PI / 6); // Half width at the detection radius
+
+        // Calculate trapezoid corners
+        QPointF baseLeft(robotRadius, -halfBaseWidth);  // Start from the right edge of the robot
+        QPointF baseRight(robotRadius, halfBaseWidth);
+        QPointF topRight(detectionRadius + robotRadius, halfTopWidth);
+        QPointF topLeft(detectionRadius + robotRadius, -halfTopWidth);
+
+        // Rotate points around the robot's center at (0,0)
+        baseLeft = rotatePoint(baseLeft, radOrientation);
+        baseRight = rotatePoint(baseRight, radOrientation);
+        topRight = rotatePoint(topRight, radOrientation);
+        topLeft = rotatePoint(topLeft, radOrientation);
+
+        // Creating the path for the trapezoid field of vision
+        QPainterPath viewField;
+        viewField.moveTo(baseLeft);
+        viewField.lineTo(baseRight);
+        viewField.lineTo(topRight);
+        viewField.lineTo(topLeft);
+        viewField.closeSubpath();
+
+        // Setting semi-transparent red for the field of vision
+        painter->setBrush(QColor(255, 0, 0, 100));
+        painter->drawPath(viewField);
     }
 };

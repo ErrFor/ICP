@@ -33,8 +33,9 @@ void AutonomousRobot::mousePressEvent(QGraphicsSceneMouseEvent *event)
         MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
         if (!mainWindow) return; // check if mainWindow exists
 
-        if (mainWindow->isDeletingModeActive()) {
+        if (mainWindow->isRobotDeletingModeActive()) {
             scene->removeItem(this);
+            mainWindow->autonomousRobots.removeOne(this);
             delete this; // delete the robot
         }
     }
@@ -59,11 +60,14 @@ void RemoteRobot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
         if (!mainWindow) return;
 
-        if (mainWindow->isDeletingModeActive()) {
+        setSelected(true);
+        mainWindow->selectRobot(this);
+        QGraphicsItem::update();
+
+        if (mainWindow->isRobotDeletingModeActive()) {
             scene->removeItem(this);
+            mainWindow->remoteRobots.removeOne(this);
             delete this;
-        } else {
-            mainWindow->selectRobot(this);  // Теперь передаем this правильного типа
         }
     }
 }

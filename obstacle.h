@@ -27,3 +27,4 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;  // mouse press event handler
 
 #endif // OBSTACLE_H
+};

@@ -19,6 +19,7 @@ class Robot : public QGraphicsItem {
 protected:
     double positionX, positionY;
     int speed;
+    QColor color;
 public:
     bool isMoving = false;
 
@@ -41,6 +42,13 @@ public:
                        sin(angle) * point.x() + cos(angle) * point.y());
     }
 
+    void setColor(const QColor &newColor) {
+        if (color != newColor) {  // Меняем цвет только если он отличается от текущего
+            color = newColor;
+            QGraphicsItem::update();  // Вызываем базовый метод update для обновления визуального представления
+        }
+    }
+
     virtual void update() = 0; // Pure virtual function for updating the robot's position
 };
 
@@ -58,6 +66,7 @@ private:
 public:
     AutonomousRobot(double posX, double posY, int orient, double detectRadius, double avoidAngle, int speed)
         : Robot(posX, posY, speed), detectionRadius(detectRadius), avoidanceAngle(avoidAngle) {
+        color = Qt::blue;
         angle = avoidAngle;
         switch (orient) {
             case 0: orientation = 270; break; // top
@@ -81,27 +90,17 @@ public:
 
             // Calculate proposed movement
             double radAngle = orientation * M_PI / 180;
-            double proposedX = positionX + speed * cos(radAngle);
-            double proposedY = positionY + speed * sin(radAngle);
+           double targetX = positionX + speed * cos(radAngle);
+           double targetY = positionY + speed * sin(radAngle);
 
-            // Check and handle boundaries
-            QRectF sceneBounds = scene()->sceneRect();
-            if (proposedX < sceneBounds.left() || proposedX > sceneBounds.right()) {
-                orientation = 180 - orientation; // Reverse direction horizontally
-                proposedX = positionX; // Stop horizontal movement
-            }
-            if (proposedY < sceneBounds.top() || proposedY > sceneBounds.bottom()) {
-                orientation = -orientation; // Reverse direction vertically
-                proposedY = positionY; // Stop vertical movement
-            }
+           // Интерполяция: перемещаем робота на 10% пути к цели
+           positionX += 0.1 * (targetX - positionX);
+           positionY += 0.1 * (targetY - positionY);
 
             // Normalize orientation
             if (orientation < 0) orientation += 360;
             if (orientation >= 360) orientation -= 360;
 
-            // Update position
-            positionX = proposedX;
-            positionY = proposedY;
             setPos(positionX, positionY);
 
             qDebug() << "Robot moved to:" << positionX << "," << positionY;
@@ -120,7 +119,7 @@ public:
         Q_UNUSED(widget);
 
         // Basic robot visualization
-        painter->setBrush(Qt::blue);
+        painter->setBrush(color);
         painter->drawEllipse(boundingRect()); // Draw robot centered at its position
 
         // Variables for trapezoid field of vision
@@ -170,13 +169,14 @@ public:
  */
 class RemoteRobot: public Robot {
 private:
-    int orientation = NULL;
+    int orientation = 0;
     double detectionRadius;
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
 public:
     RemoteRobot(double posX, double posY, int speed, double detectionRadius)
         : Robot(posX, posY, speed), detectionRadius(detectionRadius) {
         setPos(positionX, positionY);
+        color = Qt::magenta;
     }
 
     void moveForward();
@@ -192,12 +192,12 @@ public:
     void update() override {
         // Calculate proposed movement
         double radAngle = orientation * M_PI / 180;
-        double proposedX = positionX + speed * cos(radAngle);
-        double proposedY = positionY + speed * sin(radAngle);
+       double targetX = positionX + speed * cos(radAngle);
+       double targetY = positionY + speed * sin(radAngle);
 
-        // Update position
-        positionX = proposedX;
-        positionY = proposedY;
+       // Интерполяция: перемещаем робота на 10% пути к цели
+       positionX += 0.1 * (targetX - positionX);
+       positionY += 0.1 * (targetY - positionY);
         setPos(positionX, positionY);
 
         if (detectObstacle()) {
@@ -219,7 +219,7 @@ public:
         Q_UNUSED(widget);
 
         // Basic robot visualization
-        painter->setBrush(Qt::blue);
+        painter->setBrush(color);
         painter->drawEllipse(boundingRect()); // Draw robot centered at its position
 
         // Variables for trapezoid field of vision

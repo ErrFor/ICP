@@ -14,6 +14,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <stdio.h>
+#include <QGraphicsDropShadowEffect>
 
 /**
  * @brief Construct a new Main Window:: Main Window object
@@ -58,9 +59,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // set deleting mode to false
     deletingMode = false;
+    rDeletingMode = false;
 
     timer = new QTimer(this);
-    timer->setInterval(200); // update every 200 ms
+    timer->setInterval(10); // update every 200 ms
     connect(timer, &QTimer::timeout, this, &MainWindow::updateRobots);
 
     timer->stop();
@@ -171,14 +173,26 @@ void MainWindow::on_createRobotButton_clicked() {
 void MainWindow::on_deleteRobotButton_clicked()
 {
     // set deletingmode flag
-    deletingMode = !deletingMode;
-
-    // Меняем визуальное отображение для указания режима удаления
-    if (deletingMode) {
-        foreach (QGraphicsItem *item, ui->graphicsView->scene()->items()) {
-            AutonomousRobot *robotItem = dynamic_cast<AutonomousRobot*>(item);
-        }
+    rDeletingMode = !rDeletingMode;
+    if (rDeletingMode) {
+        ui->deleteRobot->setStyleSheet("QPushButton { background-color: red; }");
+    } else {
+        ui->deleteRobot->setStyleSheet("QPushButton {backgorund-color: white; }");
     }
+    // Меняем визуальное отображение для указания режима удаления
+//    foreach (QGraphicsItem *item, ui->graphicsView->scene()->items()) {
+//        AutonomousRobot *robotItem = dynamic_cast<AutonomousRobot*>(item);
+//        RemoteRobot *remoteRobotItem = dynamic_cast<RemoteRobot*>(item);
+//        if (rDeletingMode) {
+//                ui->deleteRobot->setStyleSheet("QPushButton { background-color: red; }");
+//            } else {
+//                ui->deleteRobot->setStyleSheet("QPushButton { background-color: green; }");
+//            }
+
+//        if (robotItem) {  // Убедимся, что robotItem не nullptr
+//            robotItem->setColor(rDeletingMode ? Qt::yellow : Qt::blue);  // Возвращаем цвет при выходе из режима
+//        }
+//    }
 }
 
 /**
@@ -187,7 +201,7 @@ void MainWindow::on_deleteRobotButton_clicked()
  * @param robot pointer to remote controlled robot
  */
 void MainWindow::selectRobot(RemoteRobot* robot) {
-    selectedRobot = robot;  // Сохраняем выбранного робота
+    selectedRobot = robot;  // save selected robot
 }
 
 /**

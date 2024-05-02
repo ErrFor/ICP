@@ -28,8 +28,11 @@ public:
     QTimer *timer;
     explicit MainWindow(QWidget *parent = nullptr);
     bool isDeletingModeActive() const { return deletingMode; }
+    bool isRobotDeletingModeActive() const { return rDeletingMode; }
     ~MainWindow();
     void selectRobot(RemoteRobot* robot);
+    QList<Robot*> autonomousRobots;
+    QList<Robot*> remoteRobots;
 
 private slots: // slots are functions that are called when a signal is emitted
     void on_createObstacleButton_clicked();
@@ -47,8 +50,8 @@ private slots: // slots are functions that are called when a signal is emitted
 private:
     Ui::MainWindow *ui;
     bool deletingMode;
-    QList<Robot*> autonomousRobots;
-    QList<Robot*> remoteRobots;
+    bool rDeletingMode;
+
     RemoteRobot* selectedRobot = nullptr;
 };
 

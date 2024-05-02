@@ -1,3 +1,14 @@
+/**
+ * @file obstacle.cpp
+ * @author Kininbayev Timur (xkinin00)
+ * @brief File containing the obstacle class logic
+ * @version 0.1
+ * @date 2024-05-02
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
+
 #include "obstacle.h"
 #include "qbrush.h"
 #include "qgraphicsscene.h"
@@ -6,33 +17,46 @@
 #include <QGraphicsSceneMouseEvent>
 #include "mainwindow.h"
 
+/**
+ * @brief Construct a new Obstacle:: Obstacle object
+ * 
+ * @param x x coordinate
+ * @param y y coordinate
+ * @param width size of the obstacle
+ * @param parent parent object
+ */
 Obstacle::Obstacle(qreal x, qreal y, qreal width, QGraphicsItem *parent)
     : QGraphicsRectItem(x, y, width, width, parent)
 {
-    // Устанавливаем цвет заливки препятствия
-    setBrush(QBrush(Qt::white));  // Можно изменить на другой цвет
-    // Установка черной границы вокруг препятствия
+    // set white color for the obstacle
+    setBrush(QBrush(Qt::white)); 
+    // set black color for the border
     setPen(QPen(Qt::black));
 }
 
+/**
+ * @brief When the mouse is pressed on the obstacle, it is deleted (if deleted mode is active)
+ * 
+ * @param event 
+ */
 void Obstacle::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         auto scene = this->scene();
-        if (!scene) return; // Проверка наличия сцены
+        if (!scene) return; // check if scene exists
 
         auto views = scene->views();
-        if (views.isEmpty()) return; // Проверка наличия виджетов просмотра
+        if (views.isEmpty()) return; // check if views exist
 
-        QGraphicsView* view = views.first(); // Берём первый виджет просмотра
-        if (!view) return; // Проверка, что виджет просмотра существует
+        QGraphicsView* view = views.first(); // take the first view
+        if (!view) return; // ensure that view exists
 
         MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
-        if (!mainWindow) return; // Проверка, что приведение типов выполнено корректно
+        if (!mainWindow) return; // check if mainWindow exists
 
         if (mainWindow->isDeletingModeActive()) {
             scene->removeItem(this);
-            delete this; // Удаление элемента
+            delete this; // delete the obstacle
         }
     }
 }

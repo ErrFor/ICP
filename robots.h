@@ -1,3 +1,9 @@
+/**
+ * @file robots.h
+ * @author Yaroslav Slabik (xslabi01)
+ * @author Kininbayev Timur (xkinin00)
+ * @brief File containing the robot class logic
+ */
 #include "qdebug.h"
 #include "qgraphicsscene.h"
 #include <iostream>
@@ -5,6 +11,10 @@
 #include <QGraphicsItem>
 #include <QPainter>
 
+/**
+ * @class Robot
+ * @brief Abstract class for the robot object
+ */
 class Robot : public QGraphicsItem {
 protected:
     double positionX, positionY;
@@ -18,11 +28,11 @@ public:
     }
 
     QRectF boundingRect() const override {
-        return QRectF(-10, -10, 20, 20);  // Пример размеров
+        return QRectF(-10, -10, 20, 20);  // robot size
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
-        painter->setBrush(Qt::blue);  // Задаем цвет
+        painter->setBrush(Qt::blue);  // set blue color for the robot
         painter->drawEllipse(positionX, positionY, 20, 20);
     }
 
@@ -31,9 +41,13 @@ public:
                        sin(angle) * point.x() + cos(angle) * point.y());
     }
 
-    virtual void update() = 0;
+    virtual void update() = 0; // Pure virtual function for updating the robot's position
 };
 
+/**
+ * @class AutonomousRobot
+ * @brief Class for the autonomous robot object
+ */
 class AutonomousRobot : public Robot {
 private:
     double detectionRadius;  // Radius in which the robot detects obstacles
@@ -46,16 +60,19 @@ public:
         : Robot(posX, posY, speed), detectionRadius(detectRadius), avoidanceAngle(avoidAngle) {
         angle = avoidAngle;
         switch (orient) {
-            case 0: orientation = 270; break; // Наверх
-            case 1: orientation = 0;   break; // Направо
-            case 2: orientation = 90;  break; // Вниз
-            case 3: orientation = 180; break; // Налево
-            default: orientation = 0;  break; // Дефолтное значение
+            case 0: orientation = 270; break; // top
+            case 1: orientation = 0;   break; // right
+            case 2: orientation = 90;  break; // bottom
+            case 3: orientation = 180; break; // left
+            default: orientation = 0;  break; // default right
         }
     }
     void move();
     bool detectObstacle();
 
+    /**
+     * @brief Update the robot's position
+     */
     void update() override {
         if (detectObstacle()) {
                 orientation += avoidanceAngle; // Update orientation to avoid collision
@@ -90,6 +107,14 @@ public:
             qDebug() << "Robot moved to:" << positionX << "," << positionY;
     }
 
+    /**
+     * @brief Paint the robot and its field of vision
+     * @todo change robot color
+     * 
+     * @param painter 
+     * @param option 
+     * @param widget 
+     */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override{
         Q_UNUSED(option);
         Q_UNUSED(widget);
@@ -127,13 +152,22 @@ public:
         // Setting semi-transparent red for the field of vision
         painter->setBrush(QColor(255, 0, 0, 100));
         painter->drawPath(viewField);
-}
+    }
 
+    /**
+     * @brief Rotate the robot by a given angle
+     * 
+     * @param angle 
+     */
     void rotate(double angle) {
-        setRotation(angle);  // Преобразуем в градусы и устанавливаем
+        setRotation(angle);  // Rotate the robot
     }
 };
 
+/**
+ * @class RemoteRobot
+ * @brief Class for the remote robot object
+ */
 class RemoteRobot: public Robot {
 private:
     int orientation = NULL;
@@ -146,15 +180,16 @@ public:
     }
 
     void moveForward();
-
     void rotateRight();
     void rotateLeft();
     void stop();
     bool detectObstacle();
 
+    /**
+     * @brief Update the robot's position
+     * 
+     */
     void update() override {
-
-
         // Calculate proposed movement
         double radAngle = orientation * M_PI / 180;
         double proposedX = positionX + speed * cos(radAngle);
@@ -172,6 +207,13 @@ public:
         qDebug() << "Robot moved to:" << positionX << "," << positionY;
     }
 
+    /**
+     * @brief Paint the robot and its field of vision
+     * 
+     * @param painter 
+     * @param option 
+     * @param widget 
+     */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override{
         Q_UNUSED(option);
         Q_UNUSED(widget);

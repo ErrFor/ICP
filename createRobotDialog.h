@@ -1,3 +1,8 @@
+/**
+ * @file createRobotDialog.h
+ * @author Kininbayev Timur (xkinin00)
+ * @brief File containing the create robot dialog class
+ */
 #ifndef CREATEROBOTDIALOG_H
 #define CREATEROBOTDIALOG_H
 
@@ -8,18 +13,22 @@
 #include <QFormLayout>
 #include <QLabel>
 
+/**
+ * @class CreateRobotDialog
+ * @brief Robot dialog window class for ui representation of the robot creation
+ */
 class CreateRobotDialog : public QDialog {
     Q_OBJECT
 
 public:
     explicit CreateRobotDialog(QWidget *parent = nullptr);
     int getRobotType() const;
-    int getOrientation() const;
+    int getOrientation() const; // Only for Autonomous
 
     int getSpeed() const;
     double getX() const;
     double getY() const;
-    double getDetectionRadius() const;  // Only for Autonomous
+    double getDetectionRadius() const;
     double getAvoidanceAngle() const;   // Only for Autonomous
 
 private:

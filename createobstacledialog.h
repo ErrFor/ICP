@@ -1,3 +1,13 @@
+/**
+ * @file createobstacledialog.h
+ * @author Kininbayev Timur (xkinin00)
+ * @brief File containing the create obstacle dialog class
+ * @version 0.1
+ * @date 2024-05-02
+ * 
+ * @copyright Copyright (c) 2024
+ * 
+ */
 #ifndef CREATEOBSTACLEDIALOG_H
 #define CREATEOBSTACLEDIALOG_H
 
@@ -6,6 +16,10 @@
 #include <QPushButton>
 #include <QFormLayout>
 
+/**
+ * @class CreateObstacleDialog
+ * @brief Obstacle dialog window class for ui representation of the obstacle creation
+ */
 class CreateObstacleDialog : public QDialog
 {
     Q_OBJECT

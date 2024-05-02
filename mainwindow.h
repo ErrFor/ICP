@@ -1,4 +1,10 @@
-// В файле mainwindow.h
+/**
+ * @file mainwindow.h
+ * @author Kininbayev Timur (xkinin00)
+ * @author Yaroslav Slabik (xslabi01)
+ * @brief File containing the main window class
+ * 
+ */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -10,9 +16,13 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+/**
+ * @class MainWindow
+ * @brief Main window class, contains all the slots and signals for the GUI
+ */
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT // Обязательно для использования сигналов и слотов
+    Q_OBJECT // necessary macro for Qt to recognize the class as a QObject
 
 public:
     QTimer *timer;
@@ -21,7 +31,7 @@ public:
     ~MainWindow();
     void selectRobot(RemoteRobot* robot);
 
-private slots:
+private slots: // slots are functions that are called when a signal is emitted
     void on_createObstacleButton_clicked();
     void on_deleteObstacleButton_clicked();
     void on_createRobotButton_clicked();

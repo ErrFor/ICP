@@ -40,8 +40,8 @@
    <widget class="QPushButton" name="deleteRobot">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>20</y>
+      <x>20</x>
+      <y>80</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -53,7 +53,7 @@
    <widget class="QPushButton" name="createObstacle">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>170</x>
       <y>20</y>
       <width>121</width>
       <height>41</height>
@@ -117,8 +117,8 @@
    <widget class="QPushButton" name="deleteObstacle">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>20</y>
+      <x>170</x>
+      <y>80</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -186,7 +186,7 @@
      <x>0</x>
      <y>0</y>
      <width>1498</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

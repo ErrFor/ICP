@@ -29,7 +29,7 @@ public:
     }
 
     QRectF boundingRect() const override {
-        return QRectF(-10, -10, 20, 20);  // robot size
+        return QRectF(-20, -20, 40, 40);  // robot size
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
@@ -83,28 +83,26 @@ public:
      * @brief Update the robot's position
      */
     void update() override {
+        // Calculate proposed movement
+        double radAngle = orientation * M_PI / 180;
+        double targetX = positionX + speed * cos(radAngle);
+        double targetY = positionY + speed * sin(radAngle);
+
+        // Интерполяция: перемещаем робота на 10% пути к цели
+        positionX += 0.1 * (targetX - positionX);
+        positionY += 0.1 * (targetY - positionY);
+
+        // Normalize orientation
+        if (orientation < 0) orientation += 360;
+        if (orientation >= 360) orientation -= 360;
+
+        setPos(positionX, positionY);
         if (detectObstacle()) {
-                orientation += avoidanceAngle; // Update orientation to avoid collision
-                if (orientation >= 360) orientation -= 360; // Normalize orientation
-            }
+            orientation += avoidanceAngle; // Update orientation to avoid collision
+        }
 
-            // Calculate proposed movement
-            double radAngle = orientation * M_PI / 180;
-           double targetX = positionX + speed * cos(radAngle);
-           double targetY = positionY + speed * sin(radAngle);
-
-           // Интерполяция: перемещаем робота на 10% пути к цели
-           positionX += 0.1 * (targetX - positionX);
-           positionY += 0.1 * (targetY - positionY);
-
-            // Normalize orientation
-            if (orientation < 0) orientation += 360;
-            if (orientation >= 360) orientation -= 360;
-
-            setPos(positionX, positionY);
-
-            qDebug() << "Robot moved to:" << positionX << "," << positionY;
-    }
+        qDebug() << "Robot moved to:" << positionX << "," << positionY;
+}
 
     /**
      * @brief Paint the robot and its field of vision
@@ -124,7 +122,7 @@ public:
 
         // Variables for trapezoid field of vision
         double radOrientation = orientation * M_PI / 180;
-        double robotRadius = 10;  // Radius of the robot
+        double robotRadius = 20;  // Radius of the robot
         double halfBaseWidth = robotRadius / 2;  // Half width at the robot
         double halfTopWidth = detectionRadius * tan(M_PI / 6); // Half width at the detection radius
 
@@ -224,7 +222,7 @@ public:
 
         // Variables for trapezoid field of vision
         double radOrientation = orientation * M_PI / 180;
-        double robotRadius = 10;  // Radius of the robot
+        double robotRadius = 20;  // Radius of the robot
         double halfBaseWidth = robotRadius / 2;  // Half width at the robot
         double halfTopWidth = detectionRadius * tan(M_PI / 6); // Half width at the detection radius
 

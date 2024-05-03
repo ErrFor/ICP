@@ -60,11 +60,20 @@ void RemoteRobot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
         if (!mainWindow) return;
 
+        if (mainWindow->selectedRobot){
+            mainWindow->selectedRobot->setColor(Qt::magenta);
+        }
+        setColor(Qt::yellow);
         setSelected(true);
         mainWindow->selectRobot(this);
         QGraphicsItem::update();
 
         if (mainWindow->isRobotDeletingModeActive()) {
+            if (this->isSelected()){
+
+                setSelected(false);
+                mainWindow->selectRobot(nullptr);
+            }
             scene->removeItem(this);
             mainWindow->remoteRobots.removeOne(this);
             delete this;
@@ -105,8 +114,13 @@ bool AutonomousRobot::detectObstacle() {
     QGraphicsScene* currentScene = scene();
     QRectF sceneRect = currentScene->sceneRect();
 
-    if (!sceneRect.contains(robotFuturePosition)) {
-        qDebug() << "Obstacle detected: out of scene bounds";
+    QPointF futurePosition = QPointF(positionX + dx, positionY + dy);
+    if (futurePosition.x() < sceneRect.left() || futurePosition.x() > sceneRect.right()) {
+        qDebug() << "Obstacle detected: collision with left/right boundary";
+        return true;
+    }
+    if (futurePosition.y() < sceneRect.top() || futurePosition.y() > sceneRect.bottom()) {
+        qDebug() << "Obstacle detected: collision with top/bottom boundary";
         return true;
     }
 
@@ -116,8 +130,19 @@ bool AutonomousRobot::detectObstacle() {
     detectionPath.moveTo(frontCenter);
     detectionPath.addRect(QRectF(frontCenter.x(), frontCenter.y(), detectionRadius, 20));
 
-    detectionPath.addRect(QRectF(positionX, positionY, detectionRadius, 20));
+    QTransform transform;
+    transform.translate(frontCenter.x(), frontCenter.y());
+    transform.rotateRadians(radAngle);
+    QRectF detectionRect(0, -10, detectionRadius, 20);
+    detectionPath.addRect(transform.mapRect(detectionRect));
+
+
     QList<QGraphicsItem*> collidingItems = scene()->items(detectionPath);
+
+//    if (!sceneRect.intersects(robotFuturePosition)) {
+//        qDebug() << "Obstacle detected: out of scene bounds";
+//        return true;
+//    }
 
     foreach(QGraphicsItem *item, collidingItems) {
         if (item != this && (dynamic_cast<Obstacle*>(item) || dynamic_cast<Robot*>(item))) {
@@ -139,6 +164,8 @@ void RemoteRobot::moveForward() {
         isMoving = false;
         return;
     }
+
+
 
     double radAngle = orientation * M_PI / 180;
     double dx = speed * cos(radAngle);
@@ -202,9 +229,14 @@ bool RemoteRobot::detectObstacle(){
     QPainterPath detectionPath;
     QPointF frontCenter = QPointF(positionX + cos(radAngle) * 20, positionY + sin(radAngle) * 20); // 20 - это предполагаемый "радиус" робота
     detectionPath.moveTo(frontCenter);
-    detectionPath.addRect(QRectF(frontCenter.x(), frontCenter.y(), detectionRadius, 20)); // Эта область теперь корректно ориентирована
 
-    detectionPath.addRect(QRectF(positionX, positionY, detectionRadius, 20));
+    QTransform transform;
+    transform.translate(frontCenter.x(), frontCenter.y());
+    transform.rotateRadians(radAngle);
+    QRectF detectionRect(0, -10, detectionRadius, 20);
+    detectionPath.addRect(transform.mapRect(detectionRect));
+
+
     QList<QGraphicsItem*> collidingItems = scene()->items(detectionPath);
 
     foreach(QGraphicsItem *item, collidingItems) {

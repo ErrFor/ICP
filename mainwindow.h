@@ -33,6 +33,7 @@ public:
     void selectRobot(RemoteRobot* robot);
     QList<Robot*> autonomousRobots;
     QList<Robot*> remoteRobots;
+    RemoteRobot* selectedRobot = nullptr;
 
 private slots: // slots are functions that are called when a signal is emitted
     void on_createObstacleButton_clicked();
@@ -51,8 +52,6 @@ private:
     Ui::MainWindow *ui;
     bool deletingMode;
     bool rDeletingMode;
-
-    RemoteRobot* selectedRobot = nullptr;
 };
 
 #endif // MAINWINDOW_H

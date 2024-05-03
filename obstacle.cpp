@@ -26,7 +26,7 @@
  * @param parent parent object
  */
 Obstacle::Obstacle(qreal x, qreal y, qreal width, QGraphicsItem *parent)
-    : QGraphicsRectItem(x, y, width, width, parent)
+    : QGraphicsRectItem(x - width / 2, y - width / 2, width, width, parent)
 {
     // set white color for the obstacle
     setBrush(QBrush(Qt::white)); 

@@ -22,6 +22,11 @@ protected:
     QColor color;
 public:
     bool isMoving = false;
+    enum RotationDirection {
+        NoRotation,
+        RotateLeft,
+        RotateRight
+    };
 
     Robot(double posX, double posY, int speed)
         : positionX(posX), positionY(posY), speed(speed){
@@ -176,12 +181,15 @@ public:
         setPos(positionX, positionY);
         color = Qt::magenta;
     }
+    RotationDirection rotationDirection = NoRotation;
 
     void moveForward();
     void rotateRight();
     void rotateLeft();
     void stop();
+    void updatePosition();
     bool detectObstacle();
+    RotationDirection getRotationDirection();
 
     /**
      * @brief Update the robot's position

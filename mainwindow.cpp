@@ -18,8 +18,8 @@
 
 /**
  * @brief Construct a new Main Window:: Main Window object
- * 
- * @param parent 
+ *
+ * @param parent
  */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -75,7 +75,7 @@ MainWindow::~MainWindow()
 
 /**
  * @brief Starts or continues the simulation
- * 
+ *
  */
 void MainWindow::startSimulation() {
     if (!timer->isActive()) {
@@ -85,7 +85,7 @@ void MainWindow::startSimulation() {
 
 /**
  * @brief Stops the simulation
- * 
+ *
  */
 void MainWindow::stopSimulation() {
     if (timer->isActive()) {
@@ -95,7 +95,7 @@ void MainWindow::stopSimulation() {
 
 /**
  * @brief Create obstacle
- * 
+ *
  */
 void MainWindow::on_createObstacleButton_clicked()
 {
@@ -112,7 +112,7 @@ void MainWindow::on_createObstacleButton_clicked()
 
 /**
  * @brief Delete obstacle
- * 
+ *
  */
 void MainWindow::on_deleteObstacleButton_clicked()
 {
@@ -152,7 +152,7 @@ void MainWindow::on_createRobotButton_clicked() {
         double x = dialog.getX();
         double y = dialog.getY();
 
-        if (robotType == 0) {  // Autonomous 
+        if (robotType == 0) {  // Autonomous
             double avoidanceAngle = dialog.getAvoidanceAngle();
             AutonomousRobot *robotItem = new AutonomousRobot(x, y, orientation, detectionRadius, avoidanceAngle, speed);
             autonomousRobots.append(robotItem);
@@ -183,7 +183,7 @@ void MainWindow::on_deleteRobotButton_clicked()
 
 /**
  * @brief select remote controlled robot
- * 
+ *
  * @param robot pointer to remote controlled robot
  */
 void MainWindow::selectRobot(RemoteRobot* robot) {
@@ -192,7 +192,7 @@ void MainWindow::selectRobot(RemoteRobot* robot) {
 
 /**
  * @brief move remote controlled robot to it's actual destination
- * 
+ *
  */
 void MainWindow::moveRobot() {
     qDebug() << "selected robot: " << selectedRobot;
@@ -203,17 +203,18 @@ void MainWindow::moveRobot() {
 
 /**
  * @brief rotate remote controlled robot to the right
- * 
+ *
  */
 void MainWindow::rotateRobotRight() {
     if (selectedRobot && timer->isActive()) {
         selectedRobot->rotateRight();
+
     }
 }
 
 /**
  * @brief rotate remote controlled robot to the left
- * 
+ *
  */
 void MainWindow::rotateRobotLeft() {
     if (selectedRobot && timer->isActive()) {
@@ -223,7 +224,7 @@ void MainWindow::rotateRobotLeft() {
 
 /**
  * @brief stop remote controlled robot
- * 
+ *
  */
 void MainWindow::stopRobot() {
     if (selectedRobot) {
@@ -239,11 +240,19 @@ void MainWindow::updateRobots() {
     ui->graphicsView->scene()->update();
     for (Robot* robot : autonomousRobots) {  // go through all autonomous robots
         robot->update();
+        ui->graphicsView->scene()->update();
 
     }
     for (Robot* robot: remoteRobots) { // go through all remote controlled robots
-        if(robot->isMoving){
-            robot->update();
+        ui->graphicsView->scene()->update();
+        RemoteRobot* remoteRobot = dynamic_cast<RemoteRobot*>(robot);
+        if (remoteRobot->getRotationDirection() == RemoteRobot::RotateRight) {
+            rotateRobotRight();  // Обработка поворота вправо
+        } else if (remoteRobot->getRotationDirection() == RemoteRobot::RotateLeft) {
+            rotateRobotLeft();   // Обработка поворота влево
+        }
+        if(remoteRobot->isMoving){
+            remoteRobot->update();
         }
     }
 }

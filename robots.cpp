@@ -175,6 +175,7 @@ void RemoteRobot::moveForward() {
     positionY += dy;
 
     isMoving = true;
+    rotationDirection = NoRotation;
 
     setPos(positionX, positionY);
 }
@@ -184,7 +185,10 @@ void RemoteRobot::moveForward() {
  * @todo implement robot rotation not only by 90 degrees
  */
 void RemoteRobot::rotateRight() {
-    orientation = (orientation + 90) % 360;
+    stop();
+    rotationDirection = RotateRight;
+    orientation = (orientation + 1) % 360;
+    updatePosition();
 }
 
 /**
@@ -192,7 +196,10 @@ void RemoteRobot::rotateRight() {
  * @todo implement robot rotation not only by 90 degrees
  */
 void RemoteRobot::rotateLeft() {
-    orientation = (orientation - 90 + 360) % 360;
+    stop();
+    rotationDirection = RotateLeft;
+    orientation = (orientation - 1 + 360) % 360;
+    updatePosition();
 }
 
 /**
@@ -201,6 +208,16 @@ void RemoteRobot::rotateLeft() {
  */
 void RemoteRobot::stop(){
     isMoving = false;
+    rotationDirection = NoRotation;
+    updatePosition();
+}
+
+void RemoteRobot::updatePosition() {
+    setPos(positionX, positionY);
+}
+
+Robot::RotationDirection RemoteRobot::getRotationDirection()  {
+    return rotationDirection;
 }
 
 /**

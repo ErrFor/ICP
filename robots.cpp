@@ -165,8 +165,6 @@ void RemoteRobot::moveForward() {
         return;
     }
 
-
-
     double radAngle = orientation * M_PI / 180;
     double dx = speed * cos(radAngle);
     double dy = speed * sin(radAngle);

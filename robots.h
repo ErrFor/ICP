@@ -71,6 +71,7 @@ private:
 public:
     AutonomousRobot(double posX, double posY, int orient, double detectRadius, double avoidAngle, int speed)
         : Robot(posX, posY, speed), detectionRadius(detectRadius), avoidanceAngle(avoidAngle) {
+        setPos(positionX, positionY);
         color = Qt::blue;
         angle = avoidAngle;
         switch (orient) {

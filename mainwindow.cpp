@@ -13,6 +13,9 @@
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QTimer>
+#include <QFile>
+#include <QTextStream>
+#include <QString>
 #include <stdio.h>
 #include <QGraphicsDropShadowEffect>
 
@@ -177,7 +180,7 @@ void MainWindow::on_deleteRobotButton_clicked()
     if (rDeletingMode) {
         ui->deleteRobot->setStyleSheet("QPushButton { background-color: red; }");
     } else {
-        ui->deleteRobot->setStyleSheet("QPushButton {backgorund-color: white; }");
+        ui->deleteRobot->setStyleSheet("QPushButton { backgorund-color: white; }");
     }
 }
 
@@ -195,7 +198,6 @@ void MainWindow::selectRobot(RemoteRobot* robot) {
  *
  */
 void MainWindow::moveRobot() {
-    qDebug() << "selected robot: " << selectedRobot;
     if (selectedRobot && timer->isActive()) {
         selectedRobot->moveForward();
     }
@@ -208,7 +210,6 @@ void MainWindow::moveRobot() {
 void MainWindow::rotateRobotRight() {
     if (selectedRobot && timer->isActive()) {
         selectedRobot->rotateRight();
-
     }
 }
 
@@ -240,14 +241,11 @@ void MainWindow::updateRobots() {
     ui->graphicsView->scene()->update();
     for (Robot* robot : autonomousRobots) {  // go through all autonomous robots
         robot->update();
-        ui->graphicsView->scene()->update();
-
     }
     for (Robot* robot: remoteRobots) { // go through all remote controlled robots
-        ui->graphicsView->scene()->update();
         RemoteRobot* remoteRobot = dynamic_cast<RemoteRobot*>(robot);
         if (remoteRobot->getRotationDirection() == RemoteRobot::RotateRight) {
-            rotateRobotRight();  // Обработка поворота вправо
+            rotateRobotRight();
         } else if (remoteRobot->getRotationDirection() == RemoteRobot::RotateLeft) {
             rotateRobotLeft();   // Обработка поворота влево
         }
@@ -255,6 +253,81 @@ void MainWindow::updateRobots() {
             remoteRobot->update();
         }
     }
+}
+
+void MainWindow::loadSceneFromFile(const QString& filename) {
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Cannot open file for reading:" << filename;
+        return;
+    }
+
+    QTextStream in(&file);
+    QString buffer;
+    QString currentType;
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        if (line.isEmpty() || line.startsWith("#")) {
+            continue; // Пропускаем пустые строки и комментарии
+        }
+
+        if (line.endsWith("{")) {
+            // Начало нового объекта
+            currentType = line.left(line.length() - 1).trimmed();
+            buffer.clear();
+        } else if (line.startsWith("}")) {
+            // Конец описания объекта
+            if (!currentType.isEmpty()) {
+                processObject(currentType, buffer);
+                currentType.clear();
+            }
+        } else {
+            buffer += line + "\n";
+        }
+    }
+}
+
+void MainWindow::processObject(const QString& type, const QString& attributes) {
+    QMap<QString, QString> params = parseAttributes(attributes);
+    qDebug() << "params: " << params;
+    int x = params.value("positionX").toInt();
+    qDebug() << "X: " << x;
+    int y = params.value("positionY").toInt();
+    int speed = params.value("speed").toInt();
+    int orientation = params.value("orientation").toInt();
+    int detectionRadius = params.value("detectionRadius").toInt();
+    int avoidanceAngle = params.value("avoidanceAngle").toInt();
+    int size = params.value("width").toInt();
+
+    if (type == "AutonomousRobot") {
+        AutonomousRobot *robotItem = new AutonomousRobot(x, y, orientation, detectionRadius, avoidanceAngle, speed);
+        autonomousRobots.append(robotItem);
+        ui->graphicsView->scene()->addItem(robotItem);
+    } else if (type == "RemoteRobot") {
+        RemoteRobot *remoteRobotItem = new RemoteRobot(x, y, speed, detectionRadius);
+        remoteRobots.append(remoteRobotItem);
+        ui->graphicsView->scene()->addItem(remoteRobotItem);
+    } else if (type == "Obstacle"){
+        Obstacle *obstacle = new Obstacle(x, y, size);
+        ui->graphicsView->scene()->addItem(obstacle);
+    }
+    else {
+        qDebug() << "Unknown object type:" << type;
+    }
+}
+
+QMap<QString, QString> MainWindow::parseAttributes(const QString& attributes) {
+    QMap<QString, QString> params;
+    QStringList lines = attributes.split("\n", Qt::SkipEmptyParts);
+    for (const QString& line : lines) {
+        QStringList parts = line.split("=");
+        if (parts.size() == 2) {
+            QString key = parts[0].trimmed();
+            QString value = parts[1].trimmed();
+            params[key] = value;
+        }
+    }
+    return params;
 }
 
 

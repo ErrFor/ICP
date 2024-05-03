@@ -17,8 +17,13 @@
  */
 int main(int argc, char *argv[])
 {
+
     QApplication a(argc, argv);
     MainWindow w;
+    if (argc > 1) {  // Проверяем, передан ли аргумент
+            QString filename = argv[1];  // Берем первый аргумент как имя файла
+            w.loadSceneFromFile(filename);
+    }
     w.show();
     return a.exec();
 }

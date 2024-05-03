@@ -34,6 +34,7 @@ public:
     QList<Robot*> autonomousRobots;
     QList<Robot*> remoteRobots;
     RemoteRobot* selectedRobot = nullptr;
+    void loadSceneFromFile(const QString& filename);
 
 private slots: // slots are functions that are called when a signal is emitted
     void on_createObstacleButton_clicked();
@@ -47,6 +48,8 @@ private slots: // slots are functions that are called when a signal is emitted
     void stopRobot();
     void startSimulation();
     void stopSimulation();
+    void processObject(const QString& type, const QString& attributes);
+        QMap<QString, QString> parseAttributes(const QString& attributes);
 
 private:
     Ui::MainWindow *ui;

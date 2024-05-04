@@ -60,6 +60,16 @@ void RemoteRobot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         MainWindow *mainWindow = dynamic_cast<MainWindow *>(view->window());
         if (!mainWindow) return;
 
+        if (mainWindow->isRobotDeletingModeActive()) {
+            scene->removeItem(this);
+            if (mainWindow->selectedRobot == this) {
+                mainWindow->selectRobot(nullptr);  // Clear the selected robot if it is the one being deleted
+            }
+            mainWindow->remoteRobots.removeOne(this);  // Remove from the list
+            delete this;  // Delete the object
+            return;  // Exit to avoid further processing since the object is deleted
+        }
+
         if (mainWindow->selectedRobot){
             mainWindow->selectedRobot->setColor(Qt::magenta);
         }
@@ -67,17 +77,6 @@ void RemoteRobot::mousePressEvent(QGraphicsSceneMouseEvent *event) {
         setSelected(true);
         mainWindow->selectRobot(this);
         QGraphicsItem::update();
-
-        if (mainWindow->isRobotDeletingModeActive()) {
-            if (this->isSelected()){
-
-                setSelected(false);
-                mainWindow->selectRobot(nullptr);
-            }
-            scene->removeItem(this);
-            mainWindow->remoteRobots.removeOne(this);
-            delete this;
-        }
     }
 }
 

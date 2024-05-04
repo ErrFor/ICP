@@ -6,10 +6,10 @@
  */
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "obstacle.h"
 #include "createobstacledialog.h"
 #include "createRobotDialog.h"
+#include "ui_mainwindow.h"
 #include <QGraphicsScene>
 #include <QDebug>
 #include <QTimer>
@@ -198,7 +198,7 @@ void MainWindow::selectRobot(RemoteRobot* robot) {
  *
  */
 void MainWindow::moveRobot() {
-    if (selectedRobot && timer->isActive()) {
+    if (selectedRobot && selectedRobot->scene() && timer->isActive()) {  // Check if selectedRobot is still in the scene
         selectedRobot->moveForward();
     }
 }

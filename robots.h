@@ -71,7 +71,6 @@ private:
 public:
     AutonomousRobot(double posX, double posY, int orient, double detectRadius, double avoidAngle, int speed)
         : Robot(posX, posY, speed), detectionRadius(detectRadius), avoidanceAngle(avoidAngle) {
-        setPos(positionX, positionY);
         color = Qt::blue;
         angle = avoidAngle;
         switch (orient) {
@@ -81,6 +80,7 @@ public:
             case 3: orientation = 180; break; // left
             default: orientation = 0;  break; // default right
         }
+        setPos(posX, posY);
     }
     void move();
     bool detectObstacle();
@@ -113,10 +113,10 @@ public:
     /**
      * @brief Paint the robot and its field of vision
      * @todo change robot color
-     * 
-     * @param painter 
-     * @param option 
-     * @param widget 
+     *
+     * @param painter
+     * @param option
+     * @param widget
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override{
         Q_UNUSED(option);
@@ -129,8 +129,11 @@ public:
         // Variables for trapezoid field of vision
         double radOrientation = orientation * M_PI / 180;
         double robotRadius = 20;  // Radius of the robot
-        double halfBaseWidth = robotRadius / 2;  // Half width at the robot
         double halfTopWidth = detectionRadius * tan(M_PI / 6); // Half width at the detection radius
+        double halfBaseWidth = halfTopWidth / 4;  // Half width at the robot
+        if (halfBaseWidth > robotRadius / 3){
+            halfBaseWidth = robotRadius / 3;
+        }
 
         // Calculate trapezoid corners
         QPointF baseLeft(robotRadius, -halfBaseWidth);  // Start from the right edge of the robot
@@ -159,8 +162,8 @@ public:
 
     /**
      * @brief Rotate the robot by a given angle
-     * 
-     * @param angle 
+     *
+     * @param angle
      */
     void rotate(double angle) {
         setRotation(angle);  // Rotate the robot
@@ -194,7 +197,7 @@ public:
 
     /**
      * @brief Update the robot's position
-     * 
+     *
      */
     void update() override {
         // Calculate proposed movement
@@ -216,10 +219,10 @@ public:
 
     /**
      * @brief Paint the robot and its field of vision
-     * 
-     * @param painter 
-     * @param option 
-     * @param widget 
+     *
+     * @param painter
+     * @param option
+     * @param widget
      */
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override{
         Q_UNUSED(option);
@@ -232,8 +235,11 @@ public:
         // Variables for trapezoid field of vision
         double radOrientation = orientation * M_PI / 180;
         double robotRadius = 20;  // Radius of the robot
-        double halfBaseWidth = robotRadius / 2;  // Half width at the robot
         double halfTopWidth = detectionRadius * tan(M_PI / 6); // Half width at the detection radius
+        double halfBaseWidth = halfTopWidth / 4;  // Half width at the robot
+        if (halfBaseWidth > robotRadius / 3){
+            halfBaseWidth = robotRadius / 3;
+        }
 
         // Calculate trapezoid corners
         QPointF baseLeft(robotRadius, -halfBaseWidth);  // Start from the right edge of the robot

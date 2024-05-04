@@ -137,7 +137,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Go</string>
+     <string>Move</string>
     </property>
    </widget>
    <widget class="QPushButton" name="rotateLeftButton">
@@ -150,7 +150,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Left</string>
+     <string>Rotate left</string>
     </property>
    </widget>
    <widget class="QPushButton" name="rotateRightButton">
@@ -163,7 +163,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Right</string>
+     <string>Rotate light</string>
     </property>
    </widget>
    <widget class="QPushButton" name="stopRobotButton">
@@ -189,6 +189,12 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSimulation">
+    <property name="title">
+     <string>Simulation</string>
+    </property>
+   </widget>
+   <addaction name="menuSimulation"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

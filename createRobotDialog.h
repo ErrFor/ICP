@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QFormLayout>
 #include <QLabel>
+#include <QTimer>
 
 /**
  * @class CreateRobotDialog
@@ -40,6 +41,8 @@ private:
     QLineEdit *detectionRadiusInput;
     QLineEdit *avoidanceAngleInput;
     QPushButton *createButton;
+    QTimer* validationTimer;
+    void validateInputs();
 
     void setupForm();
     void setupConnections();

@@ -37,10 +37,10 @@ public:
     void loadSceneFromFile(const QString& filename);
 
 private slots: // slots are functions that are called when a signal is emitted
-    void on_createObstacleButton_clicked();
-    void on_deleteObstacleButton_clicked();
-    void on_createRobotButton_clicked();
-    void on_deleteRobotButton_clicked();
+    void createObstacle();
+    void deleteObstacle();
+    void createRobot();
+    void deleteRobot();
     void updateRobots();
     void moveRobot();
     void rotateRobotLeft();

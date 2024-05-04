@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @author Kininbayev Timur (xkinin00)
+ * @author Yaroslav Slabik (xslabi01)
  * @brief File containing the main function 
  * 
  */
@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
     MainWindow w;
-    if (argc > 1) {  // Проверяем, передан ли аргумент
-            QString filename = argv[1];  // Берем первый аргумент как имя файла
+    if (argc > 1) {  // check if filename entered
+            QString filename = argv[1];  // take first arg as filename
             w.loadSceneFromFile(filename);
     }
     w.show();

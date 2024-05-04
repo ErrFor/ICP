@@ -31,19 +31,25 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // slots connections
-    connect(ui->createObstacle, &QPushButton::clicked, this, &MainWindow::on_createObstacleButton_clicked);
-    connect(ui->deleteObstacle, &QPushButton::clicked, this, &MainWindow::on_deleteObstacleButton_clicked);
-    connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::on_createRobotButton_clicked);
-    connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::on_deleteRobotButton_clicked);
-    connect(ui->moveRobotButton, &QPushButton::clicked, this, &MainWindow::moveRobot);
-    connect(ui->rotateRightButton, &QPushButton::clicked, this, &MainWindow::rotateRobotRight);
-    connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateRobotLeft);
-    connect(ui->stopRobotButton, &QPushButton::clicked, this, &MainWindow::stopRobot);
-    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);
+    connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
+
+    connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::createRobot);
+    connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::deleteRobot);
+
+    connect(ui->createObstacle, &QPushButton::clicked, this, &MainWindow::createObstacle);
+    connect(ui->deleteObstacle, &QPushButton::clicked, this, &MainWindow::deleteObstacle);
+
+    connect(ui->moveRobotButton, &QPushButton::clicked, this, &MainWindow::moveRobot);
+    connect(ui->stopRobotButton, &QPushButton::clicked, this, &MainWindow::stopRobot);
+
+    connect(ui->rotateLeftButton, &QPushButton::clicked, this, &MainWindow::rotateRobotLeft);
+    connect(ui->rotateRightButton, &QPushButton::clicked, this, &MainWindow::rotateRobotRight);
 
     ui->startButton->setStyleSheet("QPushButton { background-color: green; }");
     ui->stopButton->setStyleSheet("QPushButton { background-color: red; }");
+
+    this->setMaximumSize(1500, 850);
 
     // create scene
     QGraphicsScene *scene = new QGraphicsScene(this);
@@ -100,7 +106,7 @@ void MainWindow::stopSimulation() {
  * @brief Create obstacle
  *
  */
-void MainWindow::on_createObstacleButton_clicked()
+void MainWindow::createObstacle()
 {
     CreateObstacleDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
@@ -117,24 +123,24 @@ void MainWindow::on_createObstacleButton_clicked()
  * @brief Delete obstacle
  *
  */
-void MainWindow::on_deleteObstacleButton_clicked()
+void MainWindow::deleteObstacle()
 {
     // set deletingmode flag
     deletingMode = !deletingMode;
 
-    // Меняем визуальное отображение для указания режима удаления
+    // change visual for deleting mode
     if (deletingMode) {
         foreach (QGraphicsItem *item, ui->graphicsView->scene()->items()) {
             Obstacle *obstacle = dynamic_cast<Obstacle*>(item);
             if (obstacle) {
-                obstacle->setPen(QPen(Qt::red));  // Подсвечиваем препятствия красным
+                obstacle->setPen(QPen(Qt::red));  // set obstacles borders red
             }
         }
     } else {
         foreach (QGraphicsItem *item, ui->graphicsView->scene()->items()) {
             Obstacle *obstacle = dynamic_cast<Obstacle*>(item);
             if (obstacle) {
-                obstacle->setPen(QPen(Qt::black));  // Возвращаем обычный вид
+                obstacle->setPen(QPen(Qt::black));  // return default view
             }
         }
     }
@@ -145,7 +151,7 @@ void MainWindow::on_deleteObstacleButton_clicked()
  * create robot dialog where user can set robot type, position, orientation, speed and detection radius
  * @todo change update logic so robots won't change their position when new robot is created
  */
-void MainWindow::on_createRobotButton_clicked() {
+void MainWindow::createRobot() {
     CreateRobotDialog dialog(this);
     if (dialog.exec() == QDialog::Accepted) {
         int robotType = dialog.getRobotType();
@@ -173,10 +179,12 @@ void MainWindow::on_createRobotButton_clicked() {
  * @brief Delete robot
  * @todo implement robot deletion
  */
-void MainWindow::on_deleteRobotButton_clicked()
+void MainWindow::deleteRobot()
 {
     // set deletingmode flag
     rDeletingMode = !rDeletingMode;
+
+    // change button visual for deletion mode
     if (rDeletingMode) {
         ui->deleteRobot->setStyleSheet("QPushButton { background-color: red; }");
     } else {
@@ -247,7 +255,7 @@ void MainWindow::updateRobots() {
         if (remoteRobot->getRotationDirection() == RemoteRobot::RotateRight) {
             rotateRobotRight();
         } else if (remoteRobot->getRotationDirection() == RemoteRobot::RotateLeft) {
-            rotateRobotLeft();   // Обработка поворота влево
+            rotateRobotLeft();
         }
         if(remoteRobot->isMoving){
             remoteRobot->update();
@@ -268,15 +276,15 @@ void MainWindow::loadSceneFromFile(const QString& filename) {
     while (!in.atEnd()) {
         QString line = in.readLine().trimmed();
         if (line.isEmpty() || line.startsWith("#")) {
-            continue; // Пропускаем пустые строки и комментарии
+            continue; // skip blanks and comments
         }
 
         if (line.endsWith("{")) {
-            // Начало нового объекта
+            // new object
             currentType = line.left(line.length() - 1).trimmed();
             buffer.clear();
         } else if (line.startsWith("}")) {
-            // Конец описания объекта
+            // end of object
             if (!currentType.isEmpty()) {
                 processObject(currentType, buffer);
                 currentType.clear();

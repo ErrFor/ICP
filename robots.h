@@ -38,6 +38,9 @@ public:
     }
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override {
+        Q_UNUSED(option);
+        Q_UNUSED(widget);
+
         painter->setBrush(Qt::blue);  // set blue color for the robot
         painter->drawEllipse(positionX, positionY, 20, 20);
     }
@@ -48,9 +51,9 @@ public:
     }
 
     void setColor(const QColor &newColor) {
-        if (color != newColor) {  // Меняем цвет только если он отличается от текущего
+        if (color != newColor) {  // change color only if it's different from actual
             color = newColor;
-            QGraphicsItem::update();  // Вызываем базовый метод update для обновления визуального представления
+            QGraphicsItem::update();  // call base update method for color changing
         }
     }
 
@@ -94,7 +97,7 @@ public:
         double targetX = positionX + speed * cos(radAngle);
         double targetY = positionY + speed * sin(radAngle);
 
-        // Интерполяция: перемещаем робота на 10% пути к цели
+        // using interpolation to move robot only 10% of it's speed per tick
         positionX += 0.1 * (targetX - positionX);
         positionY += 0.1 * (targetY - positionY);
 
@@ -202,12 +205,12 @@ public:
     void update() override {
         // Calculate proposed movement
         double radAngle = orientation * M_PI / 180;
-       double targetX = positionX + speed * cos(radAngle);
-       double targetY = positionY + speed * sin(radAngle);
+        double targetX = positionX + speed * cos(radAngle);
+        double targetY = positionY + speed * sin(radAngle);
 
-       // Интерполяция: перемещаем робота на 10% пути к цели
-       positionX += 0.1 * (targetX - positionX);
-       positionY += 0.1 * (targetY - positionY);
+        // interpolation
+        positionX += 0.1 * (targetX - positionX);
+        positionY += 0.1 * (targetY - positionY);
         setPos(positionX, positionY);
 
         if (detectObstacle()) {

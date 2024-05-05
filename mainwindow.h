@@ -48,6 +48,7 @@ private slots: // slots are functions that are called when a signal is emitted
     void stopRobot();
     void startSimulation();
     void stopSimulation();
+    void onLoadFileClicked();
     void processObject(const QString& type, const QString& attributes);
         QMap<QString, QString> parseAttributes(const QString& attributes);
 

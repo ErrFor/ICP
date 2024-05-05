@@ -16,8 +16,10 @@
 #include <QFile>
 #include <QTextStream>
 #include <QString>
+#include <QFileDialog>
 #include <stdio.h>
 #include <QGraphicsDropShadowEffect>
+#include <QMessageBox>
 
 /**
  * @brief Construct a new Main Window:: Main Window object
@@ -33,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent)
     // slots connections
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
+
+    connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::onLoadFileClicked);
 
     connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::createRobot);
     connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::deleteRobot);
@@ -103,6 +107,18 @@ void MainWindow::stopSimulation() {
 }
 
 /**
+ * @brief Import test file
+ *
+ */
+void MainWindow::onLoadFileClicked() {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Text Files (*.txt);;All Files (*)"));
+    if (!fileName.isEmpty()) {
+        loadSceneFromFile(fileName);
+    }
+}
+
+
+/**
  * @brief Create obstacle
  *
  */
@@ -113,6 +129,35 @@ void MainWindow::createObstacle()
         int x = dialog.getX();
         int y = dialog.getY();
         int width = dialog.getWidth();
+
+        // Creating a QRectF based on obstacle attributes
+        QRectF creationObstacleArea(x, y, width, width);
+
+        // Check for overlap with other objects
+        QList<QGraphicsItem *> foundItems = ui->graphicsView->scene()->items(creationObstacleArea);
+        if (!foundItems.isEmpty()) {
+            bool obstacleFound = false;
+            bool robotFound = false;
+            for (QGraphicsItem *item : foundItems) {
+                if (dynamic_cast<Robot*>(item)) {
+                    robotFound = true;
+                } else if (dynamic_cast<Obstacle*>(item)) {
+                    obstacleFound = true;
+                }
+            }
+
+            QString message = "Cannot place an obstacle here. The space is already occupied by ";
+            if (robotFound && obstacleFound) {
+                message += "another robot and an obstacle.";
+            } else if (robotFound) {
+                message += "another robot.";
+            } else if (obstacleFound) {
+                message += "another obstacle.";
+            }
+
+            QMessageBox::warning(this, tr("Placement Error"), tr(message.toStdString().c_str()));
+            return;
+        }
 
         Obstacle *obstacle = new Obstacle(x, y, width);
         ui->graphicsView->scene()->addItem(obstacle);
@@ -160,6 +205,35 @@ void MainWindow::createRobot() {
         double detectionRadius = dialog.getDetectionRadius();
         double x = dialog.getX();
         double y = dialog.getY();
+
+        // Determining the size of the robot
+        QRectF creationArea(x - 20, y - 20, 40, 40);
+
+        // Overlap check
+        QList<QGraphicsItem *> foundItems = ui->graphicsView->scene()->items(creationArea);
+        if (!foundItems.isEmpty()) {
+            bool obstacleFound = false;
+            bool robotFound = false;
+            for (QGraphicsItem *item : foundItems) {
+                if (dynamic_cast<Robot*>(item)) {
+                    robotFound = true;
+                } else if (dynamic_cast<Obstacle*>(item)) {
+                    obstacleFound = true;
+                }
+            }
+
+            QString message = "Cannot place a robot here. The space is already occupied by ";
+            if (robotFound && obstacleFound) {
+                message += "another robot and an obstacle.";
+            } else if (robotFound) {
+                message += "another robot.";
+            } else if (obstacleFound) {
+                message += "an obstacle.";
+            }
+
+            QMessageBox::warning(this, tr("Error"), tr(message.toStdString().c_str()));
+            return;
+        }
 
         if (robotType == 0) {  // Autonomous
             double avoidanceAngle = dialog.getAvoidanceAngle();

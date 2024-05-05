@@ -324,9 +324,20 @@ void MainWindow::processObject(const QString& type, const QString& attributes) {
     }
 }
 
+
 QMap<QString, QString> MainWindow::parseAttributes(const QString& attributes) {
     QMap<QString, QString> params;
-    QStringList lines = attributes.split("\n", Qt::SkipEmptyParts);
+    QStringList rawLines = attributes.split("\n");
+    QStringList lines;
+
+    // Manually remove empty lines
+    for (const QString& line : rawLines) {
+        if (!line.trimmed().isEmpty()) {
+            lines.append(line);
+        }
+    }
+
+    // Parse key-value pairs
     for (const QString& line : lines) {
         QStringList parts = line.split("=");
         if (parts.size() == 2) {
@@ -337,6 +348,7 @@ QMap<QString, QString> MainWindow::parseAttributes(const QString& attributes) {
     }
     return params;
 }
+
 
 
 

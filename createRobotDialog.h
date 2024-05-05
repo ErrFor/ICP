@@ -23,6 +23,7 @@ class CreateRobotDialog : public QDialog {
 
 public:
     explicit CreateRobotDialog(QWidget *parent = nullptr);
+    virtual ~CreateRobotDialog();
     int getRobotType() const;
     int getOrientation() const; // Only for Autonomous
 

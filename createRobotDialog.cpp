@@ -16,6 +16,7 @@ CreateRobotDialog::CreateRobotDialog(QWidget *parent) : QDialog(parent) {
     setupConnections();
 }
 
+CreateRobotDialog::~CreateRobotDialog(){}
 /**
  * @brief Create a Robot Dialog::setup Form object
  * 

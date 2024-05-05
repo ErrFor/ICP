@@ -26,6 +26,7 @@ class CreateObstacleDialog : public QDialog
 
 public:
     explicit CreateObstacleDialog(QWidget *parent = nullptr);
+    virtual ~CreateObstacleDialog();
 
     int getX() const;
     int getY() const;

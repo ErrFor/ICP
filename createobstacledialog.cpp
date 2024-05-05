@@ -29,6 +29,10 @@ CreateObstacleDialog::CreateObstacleDialog(QWidget *parent) : QDialog(parent)
     connect(createButton, &QPushButton::clicked, this, &CreateObstacleDialog::on_createButton_clicked);
 }
 
+CreateObstacleDialog::~CreateObstacleDialog() {
+    // Destructor code here
+}
+
 /**
  * @brief Create a Obstacle Dialog::on create Button clicked object
  * 

@@ -36,9 +36,11 @@ private:
     QLineEdit *yInput;
     QLineEdit *widthInput;
     QPushButton *createButton;
+    QTimer* validationTimer;
 
 private slots:
     void on_createButton_clicked();
+    void validateInputs();
 };
 
 #endif // CREATEOBSTACLEDIALOG_H

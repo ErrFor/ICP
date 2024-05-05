@@ -4,6 +4,7 @@
  * @brief File containing the create obstacle dialog class logic
  */
 #include "createobstacledialog.h"
+#include <QTimer>
 
 /**
  * @brief Create a Obstacle Dialog:: Create Obstacle Dialog object
@@ -26,7 +27,22 @@ CreateObstacleDialog::CreateObstacleDialog(QWidget *parent) : QDialog(parent)
     setLayout(layout);
     setWindowTitle("Create Obstacle");
 
+    validationTimer = new QTimer(this);
+    connect(validationTimer, &QTimer::timeout, this, &::CreateObstacleDialog::validateInputs);
+    validationTimer->start(500);
+
     connect(createButton, &QPushButton::clicked, this, &CreateObstacleDialog::on_createButton_clicked);
+    createButton->setEnabled(false);
+}
+
+void CreateObstacleDialog::validateInputs() {
+    bool inputsValid = !xInput->text().isEmpty() && !yInput->text().isEmpty() &&
+                       !widthInput->text().isEmpty();
+    bool xValid = xInput->text().toInt() <= 1500 && xInput->text().toInt() >= 0;
+    bool yValid = yInput->text().toInt() <= 600 && yInput->text().toInt() >= 0;
+    bool widthValid = widthInput->text().toDouble() > 0;
+
+    createButton->setEnabled(inputsValid && xValid && yValid && widthValid);
 }
 
 /**

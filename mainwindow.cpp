@@ -16,6 +16,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QString>
+#include <QFileDialog>
 #include <stdio.h>
 #include <QGraphicsDropShadowEffect>
 
@@ -33,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
     // slots connections
     connect(ui->stopButton, &QPushButton::clicked, this, &MainWindow::stopSimulation);
     connect(ui->startButton, &QPushButton::clicked, this, &MainWindow::startSimulation);
+
+    connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::onLoadFileClicked);
 
     connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::createRobot);
     connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::deleteRobot);
@@ -101,6 +104,18 @@ void MainWindow::stopSimulation() {
         timer->stop();
     }
 }
+
+/**
+ * @brief Import test file
+ *
+ */
+void MainWindow::onLoadFileClicked() {
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Text Files (*.txt);;All Files (*)"));
+    if (!fileName.isEmpty()) {
+        loadSceneFromFile(fileName);
+    }
+}
+
 
 /**
  * @brief Create obstacle

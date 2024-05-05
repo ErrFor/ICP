@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->importButton, &QPushButton::clicked, this, &MainWindow::onLoadFileClicked);
 
+    connect(ui->clearButton, &QPushButton::clicked, this, &MainWindow::clearScene);
+
     connect(ui->createRobot, &QPushButton::clicked, this, &MainWindow::createRobot);
     connect(ui->deleteRobot, &QPushButton::clicked, this, &MainWindow::deleteRobot);
 
@@ -117,6 +119,15 @@ void MainWindow::onLoadFileClicked() {
     }
 }
 
+void MainWindow::clearScene() {
+    ui->graphicsView->scene()->clear(); // Удаляет все элементы со сцены
+
+    // Также, если у вас есть списки управления объектами, их тоже стоит очистить
+    autonomousRobots.clear();
+    remoteRobots.clear();
+
+    qDebug() << "Scene cleared";
+}
 
 /**
  * @brief Create obstacle

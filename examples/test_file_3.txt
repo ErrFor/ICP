@@ -1,0 +1,42 @@
+AutonomousRobot{
+    positionX = 1123
+    positionY = 550
+    orientation = 3
+    detectionRadius = 30
+    avoidanceAngle = 100
+    speed = 20
+}
+AutonomousRobot{
+    positionX = 436
+    positionY = 109
+    orientation = 90
+    detectionRadius = 40
+    avoidanceAngle = 45
+    speed = 30
+}
+AutonomousRobot{
+    positionX = 123
+    positionY = 550
+    orientation = 3
+    detectionRadius = 30
+    avoidanceAngle = 80
+    speed = 20
+}
+AutonomousRobot{
+    positionX = 436
+    positionY = 509
+    orientation = 90
+    detectionRadius = 40
+    avoidanceAngle = 60
+    speed = 30
+}
+Obstacle{
+    positionX = 278
+    positionY = 300
+    width = 300
+}
+Obstacle{
+    positionX = 1278
+    positionY = 300
+    width = 300
+}

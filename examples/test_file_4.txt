@@ -1,0 +1,76 @@
+AutonomousRobot{
+    positionX = 768
+    positionY = 278
+    orientation = 0
+    detectionRadius = 44
+    avoidanceAngle = 52
+    speed = 54
+}
+AutonomousRobot{
+    positionX = 255
+    positionY = 569
+    orientation = 1
+    detectionRadius = 23
+    avoidanceAngle = 58
+    speed = 15
+}
+RemoteRobot{
+    positionX = 1188
+    positionY = 308
+    speed = 17
+    detectionRadius = 34
+}
+RemoteRobot{
+    positionX = 245
+    positionY = 503
+    speed = 34
+    detectionRadius = 47
+}
+AutonomousRobot{
+    positionX = 904
+    positionY = 299
+    orientation = 2
+    detectionRadius = 44
+    avoidanceAngle = 52
+    speed = 26
+}
+AutonomousRobot{
+    positionX = 848
+    positionY = 178
+    orientation = 3
+    detectionRadius = 23
+    avoidanceAngle = 58
+    speed = 32
+}
+AutonomousRobot{
+    positionX = 288
+    positionY = 383
+    orientation = 4
+    detectionRadius = 44
+    avoidanceAngle = 52
+    speed = 16
+}
+AutonomousRobot{
+    positionX = 730
+    positionY = 396
+    orientation = 4
+    detectionRadius = 23
+    avoidanceAngle = 58
+    speed = 6
+}
+AutonomousRobot{
+    positionX = 387
+    positionY = 233
+    orientation = 2
+    detectionRadius = 44
+    avoidanceAngle = 52
+    speed = 16
+}
+AutonomousRobot{
+    positionX = 23
+    positionY = 44
+    orientation = 1
+    detectionRadius = 23
+    avoidanceAngle = 58
+    speed = 6
+}
